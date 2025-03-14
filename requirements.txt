@@ -1,9 +1,4 @@
-#pip install -r requirements.txt
 Flask==3.1.0
-#Фреймворк
 logging==0.4.9.6
-#Логирование
 markdown==3.7
-# файл *.md в html код
 PyJWT==2.10.1
-# Создание токена
