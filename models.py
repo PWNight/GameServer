@@ -2,19 +2,18 @@ from datetime import datetime,timedelta,timezone
 import jwt
 
 class User:
-    """Класс создания пользователя"""
     def __init__(self,login, password,token=None):
-        """Метод Создания пользователя"""
         self.login = login
         self.password = password
         self.token = token
 
-    def generate_token(self,secret_key,expires_in=3600):
+    """Генерация токена"""
+    def generate_token(self, secret_key, expires_in=3600):
         payload = {
             'user_name': self.login,
             'exp': datetime.now(timezone.utc) + timedelta(seconds=expires_in)
         }
-        return jwt.encode(payload,secret_key,algorithm='HS256')
+        return jwt.encode(payload, secret_key, algorithm='HS256')
 
 class Character:
     """Класс персонажа"""
@@ -75,8 +74,8 @@ class Inventory:
         self.max_weight = 100 # максимальный вес инвентаря
         self.current_weight = 0 # текущий вес инвентаря
 
+    """Добавление предмета в инвентарь"""
     def add_item(self, item):
-        """Добавление предмета в инвентарь"""
         if self.current_weight + item.weight <= self.max_weight:
             if item.name in self.items:
                 return False  # предмет с таким именем уже есть
@@ -85,16 +84,16 @@ class Inventory:
             return True
         return False  # превышен лимит веса
 
+    """Удаление предмета из инвентаря"""
     def remove_item(self, item_name):
-        """Удаление предмета из инвентаря"""
         if item_name in self.items:
             self.current_weight -= self.items[item_name].weight
             del self.items[item_name]
             return True
         return False
 
+    """Подсчет общей стоимости предметов"""
     def get_total_value(self):
-        """Подсчет общей стоимости предметов"""
         return sum(item.value for item in self.items.values())
 
 class DataBase:
@@ -102,6 +101,7 @@ class DataBase:
         self.users = {}
         self.characters = {}
 
+    """Добавление персонажа"""
     def character_add(self,login,name):
         if login in self.users:
             if name in self.characters:
@@ -112,6 +112,7 @@ class DataBase:
         else:
             return False
 
+    """Добавление пользователя"""
     def user_add(self,login, password):
         if login in self.users:
             return False
@@ -119,21 +120,25 @@ class DataBase:
             self.users[login] = User(login, password)
             return True
 
+    """Получение токена пользователя"""
     def token(self,login):
         user = self.users[login]
         self.users[login].token = user.generate_token(user.password)
         self.users[login] = user
         return user.token
 
+    """Проверка пароля по логину"""
     def auth(self,login, password):
         return self.users[login].password == password
 
+    """Выход из аккаунта"""
     def out(self,login):
         user = self.users[login]
         user.token = None
         self.users[login] = user
         return True
 
+    """Редактирование пароля"""
     def password_edit(self,login,password_new):
         user = self.users[login]
         if user.token is not None:
@@ -142,11 +147,13 @@ class DataBase:
         else:
             return False
 
+    """Повышение уровня"""
     def level_up(self,name):
         character = self.characters[name]
         character.level_up()
         self.characters[name] = character
 
+    """Понижение уровня"""
     def level_down(self, name):
         character = self.characters[name]
         character.level_down()
