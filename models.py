@@ -55,6 +55,18 @@ class Character:
         self.level -= 1
         self.exp = 100
 
+class Item:
+    """Класс предмета"""
+    def __init__(
+        self, name, item_type,
+        value, weight, bonus = None
+    ):
+        self.name = name,
+        self.type = item_type,
+        self.value = value,
+        self.weight = weight
+        self.bonus = bonus
+
 class DataBase:
     def __init__(self):
         self.users = {}
