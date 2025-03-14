@@ -74,12 +74,28 @@ class Inventory:
         self.items = {} # объект со всеми предметами
         self.max_weight = 100 # максимальный вес инвентаря
         self.current_weight = 0 # текущий вес инвентаря
+
     def add_item(self, item):
-        pass
-    def remove_item(self, item):
-        pass
+        """Добавление предмета в инвентарь"""
+        if self.current_weight + item.weight <= self.max_weight:
+            if item.name in self.items:
+                return False  # предмет с таким именем уже есть
+            self.items[item.name] = item
+            self.current_weight += item.weight
+            return True
+        return False  # превышен лимит веса
+
+    def remove_item(self, item_name):
+        """Удаление предмета из инвентаря"""
+        if item_name in self.items:
+            self.current_weight -= self.items[item_name].weight
+            del self.items[item_name]
+            return True
+        return False
+
     def get_total_value(self):
-        pass
+        """Подсчет общей стоимости предметов"""
+        return sum(item.value for item in self.items.values())
 
 class DataBase:
     def __init__(self):
