@@ -5,7 +5,7 @@ class DataBase:
     def __init__(self):
         self.users = {}
         self.characters = {}
-        self.trade_system = Trade(self)  # Инициализируем Trade внутри DataBase
+        self.trade_system = Trade(self)
 
     """Добавление персонажа"""
     def character_add(self, login, name):
@@ -197,12 +197,10 @@ class Trade:
         initiator = self.db.characters[initiator_name]
         target = self.db.characters[target_name]
 
-        # Проверка наличия запрашиваемых предметов у цели
         for item_name in trade['requested']:
             if item_name not in target.inventory.items:
                 return False
 
-        # Обмен предметами
         for item_name in trade['offered']:
             item = initiator.inventory.items[item_name]
             initiator.inventory.remove_item(item_name)
