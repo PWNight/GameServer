@@ -39,6 +39,7 @@ def reg():
     if not user_login or not user_password:
         log_with_ip("Registration attempt without login/password", logging.WARNING)
         return jsonify({'error': 'Login or Password required'}), 400
+
     if db.user_add(user_login, user_password):
         log_with_ip(f"User {user_login} registered")
         return jsonify({'message': 'User created'}), 201
@@ -56,6 +57,7 @@ def login():
     if not user_login or not user_password:
         log_with_ip("Login attempt without login/password", logging.WARNING)
         return jsonify({'error': 'Login or Password required'}), 400
+
     if db.auth(user_login, user_password):
         token = db.token(user_login)
         log_with_ip(f"User {user_login} logged in")
@@ -73,6 +75,7 @@ def out():
     if not user_login:
         log_with_ip("Logout attempt without login", logging.WARNING)
         return jsonify({'error': 'Login required'}), 400
+
     if db.out(user_login):
         log_with_ip(f"User {user_login} logged out")
         return jsonify({'message': 'User out of system'}), 200
@@ -90,6 +93,7 @@ def password():
     if not user_login or not new_password:
         log_with_ip("Password change attempt without login/password", logging.WARNING)
         return jsonify({'error': 'Login and new password required'}), 400
+
     if db.password_edit(user_login, new_password):
         log_with_ip(f"User {user_login} changed password")
         return jsonify({'message': 'Password updated'}), 200
@@ -107,6 +111,7 @@ def character_add():
     if not user_login or not character_name:
         log_with_ip("Character creation attempt without login/name", logging.WARNING)
         return jsonify({'error': 'Login or name required'}), 400
+
     if db.character_add(user_login, character_name):
         log_with_ip(f"User {user_login} created character {character_name}")
         return jsonify({'message': f'User {user_login} created character {character_name}'}), 201
@@ -123,6 +128,7 @@ def level_up():
     if not character_name:
         log_with_ip("Level up attempt without name", logging.WARNING)
         return jsonify({'error': 'Character name required'}), 400
+
     if character_name in db.characters and db.level_up(character_name):
         log_with_ip(f"{character_name} leveled up")
         return jsonify({'message': f'{character_name} leveled up'}), 200
@@ -139,6 +145,7 @@ def level_down():
     if not character_name:
         log_with_ip("Level down attempt without name", logging.WARNING)
         return jsonify({'error': 'Character name required'}), 400
+
     if character_name in db.characters and db.level_down(character_name):
         log_with_ip(f"{character_name} leveled down")
         return jsonify({'message': f'{character_name} leveled down'}), 200
