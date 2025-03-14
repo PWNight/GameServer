@@ -61,19 +61,19 @@ class Item:
         self, name, item_type,
         value, weight, bonus = None
     ):
-        self.name = name
-        self.type = item_type
-        self.value = value
-        self.weight = weight
-        self.bonus = bonus
+        self.name = name # название
+        self.type = item_type # тип
+        self.value = value # стоимость
+        self.weight = weight # вес
+        self.bonus = bonus # эффект/бонус от предмета
 
 class Inventory:
     def __init__(
-        self, max_weight = 100
+        self
     ):
-        self.items = {}
-        self.max_weight = max_weight
-        self.current_weight = 0
+        self.items = {} # объект со всеми предметами
+        self.max_weight = 100 # максимальный вес инвентаря
+        self.current_weight = 0 # текущий вес инвентаря
     def add_item(self, item):
         pass
     def remove_item(self, item):
