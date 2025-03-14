@@ -167,8 +167,8 @@ class Trade:
         self.db = db
         self.offers = {}
 
+    """Создание предложения сделки"""
     def create_offer(self, initiator_name, target_name, items_offered, items_requested):
-        """Создание предложения сделки"""
         if initiator_name not in self.db.characters or target_name not in self.db.characters:
             return False
 
@@ -185,8 +185,8 @@ class Trade:
         }
         return True
 
+    """Принятие сделки"""
     def accept_trade(self, target_name, initiator_name):
-        """Принятие сделки"""
         if initiator_name not in self.offers or self.offers[initiator_name]['target'] != target_name:
             return False
 
@@ -216,15 +216,15 @@ class Trade:
         trade['status'] = 'completed'
         return True
 
+    """Отклонение сделки"""
     def decline_trade(self, target_name, initiator_name):
-        """Отклонение сделки"""
         if initiator_name in self.offers and self.offers[initiator_name]['target'] == target_name:
             self.offers[initiator_name]['status'] = 'declined'
             return True
         return False
 
+    """Отмена сделки инициатором"""
     def cancel_trade(self, initiator_name):
-        """Отмена сделки инициатором"""
         if initiator_name in self.offers:
             del self.offers[initiator_name]
             return True
