@@ -16,7 +16,6 @@ class User:
         return jwt.encode(payload, secret_key, algorithm='HS256')
 
 class Character:
-    """Класс персонажа"""
     def __init__(
         self,login,name,
         heals=10, streng=1, intel=1,
@@ -55,7 +54,6 @@ class Character:
         self.exp = 100
 
 class Item:
-    """Класс предмета"""
     def __init__(
         self, name, item_type,
         value, weight, bonus = None
@@ -158,9 +156,3 @@ class DataBase:
         character = self.characters[name]
         character.level_down()
         self.characters[name] = character
-
-#print(User.__doc__)
-# db = DataBase()
-# print(db.user_add("test","1234qqwer"))
-# print(db.user_add("test","1234qqw234"))
-# print(db.users)
