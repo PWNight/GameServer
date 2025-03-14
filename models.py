@@ -28,20 +28,21 @@ class Character:
         self.name = name
         self.heals = heals
         self.char = {
-            'strength':streng, # Сила
-            'intelligence':intel, # Интеллект
-            'dexterity':dexterity, # Ловкость
-            'spirit':spirit, # Дух
-            'endurance':endurance # Выносливость
+            'strength':streng, # сила
+            'intelligence':intel, # интеллект
+            'dexterity':dexterity, # ловкость
+            'spirit':spirit, # дух
+            'endurance':endurance # выносливость
         }
         self.equipment = {
-            'head': head, # Шлем
-            'armour': armour, # Тело
-            'shoulders': shoulders, # Наплечники
-            'gloves': gloves, # Перчатки
-            'legs': legs, # Поножи
-            'boots': boots # Сапоги
+            'head': head, # шлем
+            'armour': armour, # тело
+            'shoulders': shoulders, # наплечники
+            'gloves': gloves, # перчатки
+            'legs': legs, # поножи
+            'boots': boots # сапоги
         }
+        self.inventory = Inventory()
         self.exp = exp
         self.level = level
 
