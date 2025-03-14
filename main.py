@@ -1,7 +1,7 @@
 from flask import Flask,request,jsonify,render_template
 import logging
 import markdown
-from models import DataBase,User
+from models import DataBase, User, Item
 
 app = Flask(__name__)
 db = DataBase()
@@ -148,6 +148,60 @@ def level_down():
         log_with_ip(f"Error when {character_name} level down", logging.ERROR)
         db.token(login)
         return jsonify({ 'error': f'Error when {character_name} level down' }), 401
+
+
+# POST метод для добавления предмета в инвентарь
+@app.route('/inventory/add', methods=['POST'])
+def add_item_to_inventory():
+    data = request.json
+    character_name = data.get('character_name')
+    item_data = data.get('item', {})
+
+    if not character_name or not item_data:
+        log_with_ip("Attempt to add item without character name or item data", logging.WARNING)
+        return jsonify({'error': 'Character name and item data required'}), 400
+
+    if character_name not in db.characters:
+        log_with_ip(f"Character {character_name} not found", logging.ERROR)
+        return jsonify({'error': 'Character not found'}), 404
+
+    item = Item(
+        name=item_data.get('name'),
+        item_type=item_data.get('type'),
+        value=item_data.get('value', 0),
+        weight=item_data.get('weight', 0),
+        bonus=item_data.get('bonus')
+    )
+
+    if db.characters[character_name].inventory.add_item(item):
+        log_with_ip(f"Item {item.name} added to {character_name}'s inventory")
+        return jsonify({'message': f'Item {item.name} added to {character_name}'}), 200
+    else:
+        log_with_ip(f"Failed to add item {item.name} to {character_name}'s inventory", logging.ERROR)
+        return jsonify({'error': 'Failed to add item (weight limit or duplicate)'}), 400
+
+
+# POST метод для удаления предмета из инвентаря
+@app.route('/inventory/remove', methods=['POST'])
+def remove_item_from_inventory():
+    data = request.json
+    character_name = data.get('character_name')
+    item_name = data.get('item_name')
+
+    if not character_name or not item_name:
+        log_with_ip("Attempt to remove item without character name or item name", logging.WARNING)
+        return jsonify({'error': 'Character name and item name required'}), 400
+
+    if character_name not in db.characters:
+        log_with_ip(f"Character {character_name} not found", logging.ERROR)
+        return jsonify({'error': 'Character not found'}), 404
+
+    if db.characters[character_name].inventory.remove_item(item_name):
+        log_with_ip(f"Item {item_name} removed from {character_name}'s inventory")
+        return jsonify({'message': f'Item {item_name} removed from {character_name}'}), 200
+    else:
+        log_with_ip(f"Item {item_name} not found in {character_name}'s inventory", logging.ERROR)
+        return jsonify({'error': 'Item not found'}), 404
 
 if __name__=='__main__':
     logging.info("Auth_server Start")
