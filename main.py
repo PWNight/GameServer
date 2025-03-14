@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import logging
 import markdown
-from models import DataBase, User, Item, Trade
+from models import DataBase, Item
 
 app = Flask(__name__)
 db = DataBase()
