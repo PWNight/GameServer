@@ -123,7 +123,7 @@ def level_up():
         log_with_ip("Name empty", logging.WARNING)
         return jsonify({ 'error': 'Name empty' }), 400
     if db.level_up(character_name):
-        log_with_ip(f"created {character_name}")
+        log_with_ip(f"{character_name} level up")
         db.token(login)
         return jsonify({ 'message': f'{character_name} level up' })
     else:
@@ -134,8 +134,20 @@ def level_up():
 # POST метод для понижения уровня персонажа
 @app.route('level_down',methods=['POST'])
 def level_down():
-    #TODO Разработать метод
-    pass
+    data = request.json
+    character_name = data.get('name')
+
+    if not character_name:
+        log_with_ip("Name empty", logging.WARNING)
+        return jsonify({ 'error': 'Name empty' }), 400
+    if db.level_down(character_name):
+        log_with_ip(f"{character_name} level up")
+        db.token(login)
+        return jsonify({ 'message': f'{character_name} level down' })
+    else:
+        log_with_ip(f"Error when {character_name} level down", logging.ERROR)
+        db.token(login)
+        return jsonify({ 'error': f'Error when {character_name} level down' }), 401
 
 if __name__=='__main__':
     logging.info("Auth_server Start")
