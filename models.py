@@ -61,11 +61,25 @@ class Item:
         self, name, item_type,
         value, weight, bonus = None
     ):
-        self.name = name,
-        self.type = item_type,
-        self.value = value,
+        self.name = name
+        self.type = item_type
+        self.value = value
         self.weight = weight
         self.bonus = bonus
+
+class Inventory:
+    def __init__(
+        self, max_weight = 100
+    ):
+        self.items = {}
+        self.max_weight = max_weight
+        self.current_weight = 0
+    def add_item(self, item):
+        pass
+    def remove_item(self, item):
+        pass
+    def get_total_value(self):
+        pass
 
 class DataBase:
     def __init__(self):
