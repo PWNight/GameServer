@@ -172,6 +172,9 @@ class Trade:
         if initiator_name not in self.db.characters or target_name not in self.db.characters:
             return False
 
+        if not isinstance(items_offered, list) or not isinstance(items_requested, list):
+            return False
+
         initiator = self.db.characters[initiator_name]
         for item_name in items_offered:
             if item_name not in initiator.inventory.items:
@@ -192,6 +195,10 @@ class Trade:
 
         trade = self.offers[initiator_name]
         if trade['status'] != 'pending':
+            return False
+
+        # Validate that offered and requested items are lists
+        if not isinstance(trade['offered'], list) or not isinstance(trade['requested'], list):
             return False
 
         initiator = self.db.characters[initiator_name]

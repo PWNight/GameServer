@@ -1,0 +1,626 @@
+openapi: 3.0.3
+info:
+  title: Authentication and Game API
+  description: API for user authentication, character management, inventory, and trading system
+  version: 1.0.0
+servers:
+  - url: http://0.0.0.0:5005
+    description: Local development server
+paths:
+  /reg:
+    post:
+      summary: Register a new user
+      description: Creates a new user account with login and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - password
+              properties:
+                login:
+                  type: string
+                  example: user123
+                password:
+                  type: string
+                  example: pass123
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created
+        '400':
+          description: Invalid input or username exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username exists
+  /login:
+    post:
+      summary: User login
+      description: Authenticates a user and returns a token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - password
+              properties:
+                login:
+                  type: string
+                  example: user123
+                password:
+                  type: string
+                  example: pass123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: abc123token
+        '400':
+          description: Missing login or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Login or Password required
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid credentials
+  /out:
+    post:
+      summary: User logout
+      description: Logs out a user from the system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+              properties:
+                login:
+                  type: string
+                  example: user123
+      responses:
+        '200':
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User out of system
+        '400':
+          description: Missing login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Login required
+        '500':
+          description: Logout error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User logout error
+  /password:
+    post:
+      summary: Change user password
+      description: Updates the password for a logged-in user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - password
+              properties:
+                login:
+                  type: string
+                  example: user123
+                password:
+                  type: string
+                  example: newpass123
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password updated
+        '400':
+          description: Missing login or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Login and new password required
+        '401':
+          description: Password change error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Password change error (not logged in?)
+  /character:
+    post:
+      summary: Create a new character
+      description: Creates a new character for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - name
+              properties:
+                login:
+                  type: string
+                  example: user123
+                name:
+                  type: string
+                  example: Hero1
+      responses:
+        '201':
+          description: Character created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User user123 created character Hero1
+        '400':
+          description: Missing login or character name
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Login or name required
+  /level_up:
+    post:
+      summary: Level up a character
+      description: Increases the level of a character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Hero1
+      responses:
+        '200':
+          description: Character leveled up successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hero1 leveled up
+        '400':
+          description: Missing character name
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Character name required
+        '404':
+          description: Character not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error leveling up Hero1
+  /level_down:
+    post:
+      summary: Level down a character
+      description: Decreases the level of a character
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: Hero1
+      responses:
+        '200':
+          description: Character leveled down successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hero1 leveled down
+        '400':
+          description: Missing character name
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Character name required
+        '404':
+          description: Character not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error leveling down Hero1
+  /inventory/add:
+    post:
+      summary: Add item to character inventory
+      description: Adds a new item to a character's inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - character_name
+                - item
+              properties:
+                character_name:
+                  type: string
+                  example: Hero1
+                item:
+                  type: object
+                  required:
+                    - name
+                    - type
+                  properties:
+                    name:
+                      type: string
+                      example: Sword
+                    type:
+                      type: string
+                      example: Weapon
+                    value:
+                      type: integer
+                      example: 100
+                    weight:
+                      type: integer
+                      example: 5
+                    bonus:
+                      type: object
+                      example: {"strength": 10}
+      responses:
+        '200':
+          description: Item added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item Sword added to Hero1
+        '400':
+          description: Missing character name or item data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Character name and item data required
+        '404':
+          description: Character not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Character not found
+  /inventory/remove:
+    post:
+      summary: Remove item from character inventory
+      description: Removes an item from a character's inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - character_name
+                - item_name
+              properties:
+                character_name:
+                  type: string
+                  example: Hero1
+                item_name:
+                  type: string
+                  example: Sword
+      responses:
+        '200':
+          description: Item removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Item Sword removed from Hero1
+        '400':
+          description: Missing character name or item name
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Character name and item name required
+        '404':
+          description: Character or item not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Item not found
+  /trade/offer:
+    post:
+      summary: Create a trade offer
+      description: Creates a trade offer between two characters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - initiator_name
+                - target_name
+                - items_offered
+                - items_requested
+              properties:
+                initiator_name:
+                  type: string
+                  example: Hero1
+                target_name:
+                  type: string
+                  example: Hero2
+                items_offered:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Sword"]
+                items_requested:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Shield"]
+      responses:
+        '200':
+          description: Trade offer created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Trade offer from Hero1 to Hero2 created
+        '400':
+          description: Missing trade data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: All trade fields required
+  /trade/accept:
+    post:
+      summary: Accept a trade offer
+      description: Accepts a pending trade offer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - target_name
+                - initiator_name
+              properties:
+                target_name:
+                  type: string
+                  example: Hero2
+                initiator_name:
+                  type: string
+                  example: Hero1
+      responses:
+        '200':
+          description: Trade completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Trade between Hero1 and Hero2 completed
+        '400':
+          description: Missing target or initiator names
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Target and initiator names required
+  /trade/decline:
+    post:
+      summary: Decline a trade offer
+      description: Declines a pending trade offer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - target_name
+                - initiator_name
+              properties:
+                target_name:
+                  type: string
+                  example: Hero2
+                initiator_name:
+                  type: string
+                  example: Hero1
+      responses:
+        '200':
+          description: Trade declined successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Trade between Hero1 and Hero2 declined
+        '400':
+          description: Missing target or initiator names
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Target and initiator names required
+  /trade/cancel:
+    post:
+      summary: Cancel a trade offer
+      description: Cancels a trade offer initiated by the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - initiator_name
+              properties:
+                initiator_name:
+                  type: string
+                  example: Hero1
+      responses:
+        '200':
+          description: Trade offer canceled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Trade offer from Hero1 canceled
+        '400':
+          description: Missing initiator name
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Initiator name required

@@ -1,10 +1,28 @@
 from flask import Flask, request, jsonify, render_template
 import logging
 import markdown
+from flasgger import Swagger
 from models import DataBase, Item
 
 app = Flask(__name__)
 db = DataBase()
+
+swagger_config = {
+    "openapi": "3.0.3",
+    "specs": [
+        {
+            "endpoint": 'apispec',
+            "route": '/apispec.json',
+            "rule_filter": lambda rule: True,
+            "model_filter": lambda tag: True,
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/api",
+    "headers": []
+}
+swagger = Swagger(app, config=swagger_config, template_file='static/swagger.yaml')
 
 logging.basicConfig(
     level=logging.INFO,
@@ -213,6 +231,13 @@ def create_trade_offer():
     target_name = data.get('target_name')
     items_offered = data.get('items_offered', [])
     items_requested = data.get('items_requested', [])
+
+    if items_offered is None or not isinstance(items_offered, list):
+        items_offered = []
+        log_with_ip("items_offered is None or not a list, defaulting to empty list", logging.WARNING)
+    if items_requested is None or not isinstance(items_requested, list):
+        items_requested = []
+        log_with_ip("items_requested is None or not a list, defaulting to empty list", logging.WARNING)
 
     if not initiator_name or not target_name or not items_offered or not items_requested:
         log_with_ip("Incomplete trade offer data", logging.WARNING)
